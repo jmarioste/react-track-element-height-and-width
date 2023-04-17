@@ -1,23 +1,12 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useState } from "react";
+import { useElementSize } from "usehooks-ts";
 
 export default function Component() {
   const [items, setItems] = useState<string[]>([]);
 
-  // Step 1. create a reference to the element we want to track
-  const ref = useRef<HTMLDivElement>(null);
-  // Step 2. create a state to track the dimensions of the element
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-
-  // Step 3. useUseLayoutEffect over useEffect so that we update the dimensions after the dom has finished updating
-  useLayoutEffect(() => {
-    if (ref.current) {
-      const { clientWidth, clientHeight } = ref.current;
-      setDimensions({
-        width: clientWidth,
-        height: clientHeight,
-      });
-    }
-  }, [items]);
+  // Step 1. use the useElementSize hook.
+  // this returns a ref and the dimensions/size object
+  const [ref, size] = useElementSize();
   return (
     <main className="max-w-xl mx-auto">
       <h1>React Height and Width Tutorial</h1>
@@ -37,10 +26,10 @@ export default function Component() {
           Add item
         </button>
       </div>
-      {/* Step 5. Assign the dimensions to the other element */}
+      {/* Step 5. Assign the size object to the other element */}
       <div
         className="bg-indigo-500 text-white w-full p-4 absolute bottom-10 left-0"
-        style={{ height: dimensions.height, width: dimensions.width }}
+        style={{ height: size.height, width: size.width }}
       >
         <h2 className="text-lg">Element B</h2>
         <p>
